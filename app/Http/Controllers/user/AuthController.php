@@ -9,17 +9,13 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    /**
-     * Show login modal – not needed, but method exists.
-     */
+    
     public function showLoginForm()
     {
         return view('user.home');
     }
 
-    /**
-     * Handle user login (API).
-     */
+   
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -29,7 +25,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            // Ensure user is not admin (optional)
+           
             if ($user->is_admin) {
                 Auth::logout();
                 return response()->json(['message' => 'Unauthorized'], 403);
@@ -41,9 +37,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'Invalid credentials'], 401);
     }
 
-    /**
-     * Handle user registration (API).
-     */
+   
     public function register(Request $request)
     {
         $data = $request->validate([
@@ -55,7 +49,7 @@ class AuthController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        // Validate age >= 15
+       
         $birthday = \Carbon\Carbon::parse($data['birthday']);
         if ($birthday->age < 15) {
             return response()->json(['message' => 'You must be at least 15 years old.'], 422);
@@ -69,9 +63,7 @@ class AuthController extends Controller
         return response()->json(['token' => $token, 'user' => $user]);
     }
 
-    /**
-     * Handle user logout (API).
-     */
+    
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
