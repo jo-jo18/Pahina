@@ -7,18 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
-{
-    /**
-     * Show admin login modal (or page) – not needed if using modal, but for direct access.
-     */
+{   
     public function showLoginForm()
     {
-        return view('admin.dashboard'); // login modal is in the layout
+        return view('admin.dashboard');
     }
 
-    /**
-     * Handle admin login (API).
-     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -35,9 +29,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Invalid credentials'], 401);
     }
 
-    /**
-     * Handle admin logout (API).
-     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
