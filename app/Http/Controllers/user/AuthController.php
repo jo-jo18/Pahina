@@ -3,50 +3,50 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
-    /**
-     * Show login modal – not needed, but method exists.
-     */
     public function showLoginForm()
     {
         return view('user.home');
     }
 
-    /**
-     * Handle user login (API).
-     */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            // Ensure user is not admin (optional)
-            if ($user->is_admin) {
-                Auth::logout();
-                return response()->json(['message' => 'Unauthorized'], 403);
-            }
-            $token = $user->createToken('user-token')->plainTextToken;
-            return response()->json(['token' => $token, 'user' => $user]);
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && !$user->is_admin && Hash::check($request->password, $user->password)) {
+            $token = $user->createToken('user-token', ['user'])->plainTextToken;
+            return response()->json([
+                'token' => $token, 
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'profile_pic' => $user->profile_pic,
+                    'birthday' => $user->birthday,
+                    'phone' => $user->phone,
+                    'address' => $user->address,
+                ]
+            ]);
         }
 
         return response()->json(['message' => 'Invalid credentials'], 401);
     }
 
-    /**
-     * Handle user registration (API).
-     */
     public function register(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
@@ -55,26 +55,47 @@ class AuthController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        // Validate age >= 15
-        $birthday = \Carbon\Carbon::parse($data['birthday']);
+        $birthday = Carbon::parse($request->birthday);
         if ($birthday->age < 15) {
-            return response()->json(['message' => 'You must be at least 15 years old.'], 422);
+            return response()->json([
+                'message' => 'You must be at least 15 years old.'
+            ], 422);
         }
 
-        $data['password'] = bcrypt($data['password']);
-        $data['is_admin'] = false;
-        $user = User::create($data);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'birthday' => $request->birthday,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'is_admin' => false,
+        ]);
 
-        $token = $user->createToken('user-token')->plainTextToken;
-        return response()->json(['token' => $token, 'user' => $user]);
+        $token = $user->createToken('user-token', ['user'])->plainTextToken;
+        
+        return response()->json([
+            'token' => $token, 
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'profile_pic' => $user->profile_pic,
+                'birthday' => $user->birthday,
+                'phone' => $user->phone,
+                'address' => $user->address,
+            ]
+        ]);
     }
 
-    /**
-     * Handle user logout (API).
-     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Logged out']);
+        return response()->json(['message' => 'Logged out successfully']);
+    }
+
+    public function user(Request $request)
+    {
+        return response()->json($request->user());
     }
 }

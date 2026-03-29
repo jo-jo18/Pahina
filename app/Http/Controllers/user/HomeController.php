@@ -3,24 +3,23 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Book;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Show home section.
-     */
     public function index()
     {
         return view('user.home');
     }
 
-    /**
-     * Get featured books (API).
-     */
     public function getFeatured()
     {
-        // TODO: return featured books
-        return response()->json([]);
+        $books = Book::inStock()
+            ->orderBy('created_at', 'desc')
+            ->limit(4)
+            ->get();
+
+        return response()->json($books);
     }
 }
