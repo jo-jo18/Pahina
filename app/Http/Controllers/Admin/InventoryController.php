@@ -31,7 +31,7 @@ class InventoryController extends Controller
             'stock' => 'required|integer|min:0',
             'synopsis' => 'required|string',
             'condition' => 'required|in:new,like-new,good,acceptable',
-            'image' => 'nullable|image|max:2048'
+            'image' => 'nullable|image|max:10240'
         ]);
 
         $data = $request->except('image');
@@ -61,7 +61,7 @@ class InventoryController extends Controller
             'stock' => 'required|integer|min:0',
             'synopsis' => 'required|string',
             'condition' => 'required|in:new,like-new,good,acceptable',
-            'image' => 'nullable|image|max:2048'
+            'image' => 'nullable|image|max:10240'
         ]);
 
         $data = $request->except('image');

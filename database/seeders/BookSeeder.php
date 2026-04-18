@@ -17,7 +17,7 @@ class BookSeeder extends Seeder
                 'stock' => 15,
                 'synopsis' => 'A classic novel of love and social standing in 19th century England.',
                 'condition' => 'good',
-                'image' => null,
+                'image' => 'books/y995gd8yAZa3ztn3WwXK1puBobIepZNPxL45K6Mm.png',
             ],
             [
                 'isbn' => '9780061120084',
@@ -27,7 +27,7 @@ class BookSeeder extends Seeder
                 'stock' => 8,
                 'synopsis' => 'A gripping, heart-wrenching tale of racial injustice in the Deep South.',
                 'condition' => 'like-new',
-                'image' => null,
+                'image' => 'books/cktsh95dgPuZVU1lcBM2gsLb2ZV2BZcsXlqCwKvr.png',
             ],
             [
                 'isbn' => '9780451524935',
@@ -37,7 +37,7 @@ class BookSeeder extends Seeder
                 'stock' => 3,
                 'synopsis' => 'A dystopian social science fiction novel and cautionary tale.',
                 'condition' => 'acceptable',
-                'image' => null,
+                'image' => 'books/t7dVX72CYr12WUo55pQYud4SPRouDZt1pn4d0xU3.png',
             ],
             [
                 'isbn' => '9780743273565',
@@ -47,7 +47,7 @@ class BookSeeder extends Seeder
                 'stock' => 10,
                 'synopsis' => 'A critique of the American Dream set in the Jazz Age.',
                 'condition' => 'new',
-                'image' => null,
+                'image' => 'books/758VvCuMFIdW9Jp6cC3Unw9zaL1gKSkqy49OJo2y.png',
             ],
         ];
 
