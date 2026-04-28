@@ -15,7 +15,6 @@ body{
     background:#f5e6d3;
 }
 
-    /* --- THE 3D SPLIT WELCOME CARD EFFECT --- */
     .welcome-perspective-container {
         perspective: 1000px;
         padding: 1rem;
@@ -108,11 +107,11 @@ body{
     }
     .welcome-btn:hover { transform: scale(1.05); background: #f5c542; }
 
-    /* --- UPDATED FEATURED BOOKS STYLES (3D EFFECTS) --- */
+
     .featured-wrapper { margin-top: 2rem; position: relative; padding: 0 0 2rem; }
     .featured-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     
-    /* UPDATED: COLOR CHANGED FROM BLUE TO GOLD/THEME COLOR */
+
     .featured-header h3 { 
         font-size: 1.8rem; 
         background: linear-gradient(135deg, #8b5a2b, #d4a843); 
@@ -132,7 +131,7 @@ body{
         border-radius: 50%;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         transition: all 0.2s;
-        color: #d4a843; /* Changed from blue */
+        color: #d4a843;
         margin: 0;
     }
     .swiper-nav-buttons .swiper-button-prev::after,
@@ -199,7 +198,7 @@ body{
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* Fixed Three.js Background: Light Brown with Dust & Gold Rings */
+
 (function() {
     const container = document.getElementById('beautiful-3d-bg');
     if (!container) return;
@@ -215,7 +214,6 @@ body{
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
 
-    // 1. Dust Particles
     const dustGeometry = new THREE.BufferGeometry();
     const dustCount = 8000;
     const positions = new Float32Array(dustCount * 3);
@@ -235,7 +233,6 @@ body{
     const dustParticles = new THREE.Points(dustGeometry, dustMaterial);
     mainGroup.add(dustParticles);
 
-    // 2. Gold Rings Effect
     const ringGroup = new THREE.Group();
     mainGroup.add(ringGroup);
     const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xd4a843, side: THREE.DoubleSide, transparent: true, opacity: 0.3 });
@@ -275,34 +272,28 @@ body{
 
 
 <script>
-    /** * Navigation Logic: 
-     * Hides all sections and shows the one requested.
-     */
+
     function showSection(sectionId) {
-        // 1. Hide all main sections
+
         const sections = document.querySelectorAll('section.section');
         sections.forEach(sec => {
             sec.style.display = 'none';
             sec.classList.remove('active');
         });
 
-        // 2. Handle the 'shop' logic or other dynamic sections
+
         let targetSection = document.getElementById(sectionId);
         
-        // If 'shop' is clicked but doesn't exist as a hardcoded <section id="shop">, 
-        // you can redirect or reveal a hidden div.
         if (targetSection) {
             targetSection.style.display = 'block';
             targetSection.classList.add('active');
             
-            // Smooth scroll to top when changing sections
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             console.warn("Section '" + sectionId + "' not found. Ensure your shop container has id='" + sectionId + "'");
         }
     }
 
-    // Initialize: Ensure only the home section is visible on first load
     document.addEventListener('DOMContentLoaded', () => {
         const allSections = document.querySelectorAll('section.section');
         allSections.forEach((sec, index) => {
@@ -328,7 +319,7 @@ body{
                 </div>
 
                 <div class="welcome-card-content">
-                    <h2 class="welcome-title-3d">Welcome to Pahina, <span>Your trusted Pahinga</span></h2>
+                    <h2 class="welcome-title-3d">Welcome to Pahina, <span>Your trusted Pahinga.</span></h2>
                     <p class="welcome-subtitle-3d">Discover your next favorite book from our curated collection of pre-loved and brand-new titles.</p>
                     
                     <div class="welcome-stats-row">
@@ -450,7 +441,7 @@ body{
         setTimeout(window.loadFeaturedBooks, 500);
     });
 
-    /* 3D Dust Effect inside Black Box (Welcome Card) */
+
     (function() {
         const cardContainer = document.getElementById('box-3d-canvas');
         if (!cardContainer) return;
@@ -503,7 +494,7 @@ body{
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
-    /* Hover effect for Quick Links */
+
     .footer-link {
         transition: color 0.3s ease;
     }
@@ -511,7 +502,6 @@ body{
         color: #d4a843 !important;
     }
 
-    /* Social Icon Hover */
     .social-icon {
         transition: transform 0.3s ease, color 0.3s ease;
     }

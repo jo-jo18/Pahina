@@ -412,7 +412,7 @@ function updateNavigation() {
     if (currentUser) {
         let profileHtml = '';
         if (currentUser.profile_pic) {
-            profileHtml = `<img src="/storage/${currentUser.profile_pic}" alt="${currentUser.name}">`;
+        profileHtml = `<img src="/storage/${currentUser.profile_pic}" style="width:40px; height:40px; display:block;">`;
         } else {
             profileHtml = `<span>${currentUser.name.charAt(0).toUpperCase()}</span>`;
         }
