@@ -418,11 +418,11 @@ function updateNavigation() {
         }
         
         navButtons.innerHTML = `
-            <button class="nav-btn" onclick="showSection('home')">🏠 Home</button>
-            <button class="nav-btn" onclick="showSection('shop')">📚 Shop</button>
-            <button class="nav-btn" onclick="showSection('wishlist')">❤️ Wishlist</button>
-            <button class="nav-btn" onclick="showSection('cart')">🛒 Cart (${cartCount})</button>
-            <button class="nav-btn" onclick="showSection('orders')">📦 Orders</button>
+            <button class="nav-btn" onclick="showSection('home')">Home</button>
+            <button class="nav-btn" onclick="showSection('shop')">Shop</button>
+            <button class="nav-btn" onclick="showSection('wishlist')">Wishlist</button>
+            <button class="nav-btn" onclick="showSection('cart')">Cart (${cartCount})</button>
+            <button class="nav-btn" onclick="showSection('orders')">Orders</button>
             <div class="profile-container">
                 <div class="profile-avatar" onclick="toggleDropdown()">
                     ${profileHtml}
@@ -444,10 +444,10 @@ function updateNavigation() {
         `;
     } else {
         navButtons.innerHTML = `
-            <button class="nav-btn" onclick="showSection('home')">🏠 Home</button>
-            <button class="nav-btn" onclick="showSection('shop')">📚 Shop</button>
-            <button class="nav-btn" onclick="openLoginModal()">🔑 Login</button>
-            <button class="nav-btn" onclick="openRegisterModal()">📝 Register</button>
+            <button class="nav-btn" onclick="showSection('home')">Home</button>
+            <button class="nav-btn" onclick="showSection('shop')">Shop</button>
+            <button class="nav-btn" onclick="openLoginModal()">Login</button>
+            <button class="nav-btn" onclick="openRegisterModal()">Register</button>
         `;
     }
 }
