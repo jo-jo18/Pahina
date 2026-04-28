@@ -1,3 +1,11 @@
+
+admin.js
+
+Page
+1
+/
+1
+100%
 const API_BASE_URL = '/api/admin';
 let authToken = localStorage.getItem('admin_token');
 let notificationCheckInterval = null;
@@ -2139,3 +2147,10 @@ window.openProfileSettings = openProfileSettings;
 window.quickSync = quickSync;
 window.quickExport = quickExport;
 window.quickAddBook = quickAddBook;
+You're currently signed in as
+carbonillajoelen@gmail.com
+
+Joelen Carbonilla
+Change account
+OK
+Displaying admin.js.
