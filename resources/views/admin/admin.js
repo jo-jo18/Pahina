@@ -279,7 +279,6 @@ async function apiRequest(endpoint, method = 'GET', data = null, isFormData = fa
     }
 }
 
-
 async function loadPublicDashboardData() {
     try {
         const [recentOrders, lowStock] = await Promise.all([
@@ -296,7 +295,70 @@ async function loadPublicDashboardData() {
     }
 }
 
+async function loadBestSellers() {
+    if (bestSellersLoading || bestSellersLoaded || bestSellersLoadAttempted) {
+        return;
+    }
+    
+    if (bestSellersLoadTimeout) {
+        clearTimeout(bestSellersLoadTimeout);
+    }
+    
+    bestSellersLoading = true;
+    bestSellersLoadAttempted = true;
+    
+    try {
+        const data = await apiRequest('/dashboard/best-sellers', 'GET', null, false, true);
+        displayBestSellers(data);
+        bestSellersLoaded = true;
+        console.log('Best sellers loaded successfully');
+    } catch (error) {
+        console.error('Error loading best sellers:', error);
+        const bestSellersGrid = document.getElementById('bestSellersGrid');
+        if (bestSellersGrid) {
+            bestSellersGrid.innerHTML = '<p style="text-align: center; color: #64748b;">Unable to load best sellers. Please try again later.</p>';
+        }
+        bestSellersLoadTimeout = setTimeout(() => {
+            bestSellersLoading = false;
+            bestSellersLoaded = false;
+            bestSellersLoadAttempted = false;
+            loadBestSellers();
+        }, 60000);
+    } finally {
+        bestSellersLoading = false;
+    }
+}
 
+function displayBestSellers(books) {
+    const bestSellersGrid = document.getElementById('bestSellersGrid');
+    if (!bestSellersGrid) return;
+
+    if (!books || books.length === 0) {
+        bestSellersGrid.innerHTML = '<p style="text-align: center; color: #64748b;">No sales data yet</p>';
+        return;
+    }
+
+    bestSellersGrid.innerHTML = books.map((book, index) => `
+        <div class="best-seller-card" style="animation: fadeIn 0.3s ease-out ${index * 0.05}s both;">
+            <div class="best-seller-rank">#${index + 1}</div>
+            <div class="best-seller-icon">${index === 0 ? getIcon('crown') : index === 1 ? getIcon('medal') : index === 2 ? getIcon('star') : getIcon('book')}</div>
+            <h4>${escapeHtml(book.title)}</h4>
+            <div class="best-seller-author">by ${escapeHtml(book.author || 'Unknown')}</div>
+            <div class="best-seller-stats">
+                <div class="best-seller-stat">
+                    <div class="best-seller-stat-value">${book.total_sold || 0}</div>
+                    <div class="best-seller-stat-label">sold</div>
+                </div>
+                <div class="best-seller-stat">
+                    <div class="best-seller-stat-value">$${(book.total_revenue || 0).toFixed(2)}</div>
+                    <div class="best-seller-stat-label">revenue</div>
+                </div>
+            </div>
+            <div class="best-seller-price">$${parseFloat(book.price).toFixed(2)}</div>
+            <span class="best-seller-badge">${book.condition || 'N/A'}</span>
+        </div>
+    `).join('');
+}
 
 function displayRecentOrdersPublic(orders) {
     const recentOrdersBody = document.getElementById('recentOrdersPreview');
@@ -551,9 +613,9 @@ function updateNavigation() {
     if (!navButtons) return;
     
     if (currentUser && currentUser.is_admin) {
-        const loginHeroContainer = document.getElementById('loginHeroContainer');
-        if (loginHeroContainer) {
-            loginHeroContainer.style.display = 'none';
+        const bestSellersContainer = document.getElementById('bestSellersContainer');
+        if (bestSellersContainer) {
+            bestSellersContainer.style.display = 'none';
         }
 
         document.querySelectorAll('.section').forEach(s => {
@@ -626,9 +688,9 @@ function updateNavigation() {
             loadNotifications();
         }
     } else {
-        const loginHeroContainer = document.getElementById('loginHeroContainer');
-        if (loginHeroContainer) {
-            loginHeroContainer.style.display = 'flex';
+        const bestSellersContainer = document.getElementById('bestSellersContainer');
+        if (bestSellersContainer) {
+            bestSellersContainer.style.display = 'flex';
         }
         
         document.querySelectorAll('.section').forEach(s => {
@@ -639,8 +701,15 @@ function updateNavigation() {
             modal.classList.remove('active');
         });
         
-        navButtons.innerHTML = '';
+        navButtons.innerHTML = `
+            <button class="nav-btn" onclick="openLoginModal()">
+                ${getIcon('admin')} Admin Login
+            </button>
+        `;
 
+        if (!bestSellersLoaded && !bestSellersLoading && !bestSellersLoadAttempted) {
+            loadBestSellers();
+        }
     }
 }
 
@@ -772,6 +841,7 @@ async function logout() {
         
         updateNavigation();
         showToast('👋 Logged out successfully', 'info');
+        loadBestSellers();
     }
 }
 
@@ -1869,7 +1939,7 @@ async function loadSalesReports() {
     const period = document.getElementById('reportPeriod')?.value || 'today';
     
     try {
-        const data = await apiRequest(`/reports/sales?period=₱{period}`);
+        const data = await apiRequest(`/reports/sales?period=${period}`);
         displaySalesReports(data);
     } catch (error) {
         console.error('Error loading sales reports:', error);
@@ -1877,7 +1947,7 @@ async function loadSalesReports() {
         if (revenueStats) {
             revenueStats.innerHTML = `
                 <div class="stat-card">
-                    <div class="stat-icon">₱{getIcon('reject')}</div>
+                    <div class="stat-icon">${getIcon('reject')}</div>
                     <h4>Error</h4>
                     <div class="stat-value">Unable to load reports</div>
                     <div class="stat-label">Please try again later</div>
@@ -2135,6 +2205,7 @@ window.exportData = exportData;
 window.exportOrders = exportOrders;
 window.exportReport = exportReport;
 window.closeModal = closeModal;
+window.openUserInterface = openUserInterface;
 window.openProfileSettings = openProfileSettings;
 window.quickSync = quickSync;
 window.quickExport = quickExport;
